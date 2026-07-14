@@ -5,3 +5,15 @@ compatibility_date = "2026-07-01"
 compatibility_flags = ["nodejs_compat"]
 
 browser = { binding = "MYBROWSER" }
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "f970107db7be47f5866a428c7d24ef9c"
+
+[vars]
+# Turnstile テストキー（常に成功）。本番キーは命名・ドメイン決定後に差し替え
+TURNSTILE_SITE_KEY = "1x00000000000000000000AA"
