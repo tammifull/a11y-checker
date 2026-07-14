@@ -6,6 +6,8 @@ compatibility_flags = ["nodejs_compat"]
 
 browser = { binding = "MYBROWSER" }
 
+# カスタムドメイン設定時にworkers.dev配信が自動無効化されるため、明示的に両方有効にする
+workers_dev = true
 routes = [
   { pattern = "a11y-checker.doggo-company.com", custom_domain = true }
 ]

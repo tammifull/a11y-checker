@@ -87,7 +87,9 @@ export function renderReportHtml(report: Report): string {
   </section>
   <div class="note">
     自動チェックで判定できるのはWCAG達成基準の2〜3割です。残りは目視・キーボード操作・スクリーンリーダーでの確認が必要です。<br>
-    準拠: デジタル庁「ウェブアクセシビリティ導入ガイドブック」（DS-671.2、2025年10月16日）／ WAIC JIS X 8341-3:2016 ガイドライン
+    準拠: デジタル庁「ウェブアクセシビリティ導入ガイドブック」（DS-671.2、2025年10月16日）／ WAIC JIS X 8341-3:2016 ガイドライン<br>
+    このレポートは自動チェックの結果であり、JIS X 8341-3:2016 適合の証明ではありません。<br>
+    運営: DOGGO Company株式会社（https://doggo-company.com ／ お問い合わせ: https://doggo-company.com/contact/）
   </div>
 </body>
 </html>`;

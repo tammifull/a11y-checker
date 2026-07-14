@@ -164,3 +164,25 @@ footer {
   color: #555;
   font-size: 0.85rem;
 }
+footer a {
+  color: var(--accent);
+}
+.trust {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.trust h2 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+.trust ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.trust li {
+  margin-bottom: 6px;
+}
