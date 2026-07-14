@@ -98,12 +98,95 @@ function renderReport(report) {
     )
     .join("");
 
+  renderAiButton(report);
+
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
   document
     .getElementById("result")
     .scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+}
+
+function renderAiButton(report) {
+  const section = document.getElementById("manual-section");
+  let box = document.getElementById("ai-review-box");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "ai-review-box";
+    section.appendChild(box);
+  }
+  if (!report.pageExtract) {
+    box.innerHTML = "";
+    return;
+  }
+  box.innerHTML = `
+    <button type="button" id="ai-review-btn" class="secondary">🤖 AI所見を生成（β）— リンク文言・読み上げ順序</button>
+    <p class="ai-note">テキスト系2項目をAIが下書きします（1日3回まで／結果は要確認）</p>
+    <div id="ai-review-result"></div>`;
+  document
+    .getElementById("ai-review-btn")
+    .addEventListener("click", runAiReviewUi);
+}
+
+async function runAiReviewUi() {
+  const btn = document.getElementById("ai-review-btn");
+  const out = document.getElementById("ai-review-result");
+  if (!turnstileToken) {
+    out.innerHTML =
+      '<p class="error">セキュリティ確認の完了を待ってから再度押してください</p>';
+    return;
+  }
+  btn.disabled = true;
+  out.innerHTML = "<p>AIが確認しています…（数秒かかります）</p>";
+  try {
+    const res = await fetch("/api/ai-review", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        url: lastReport.url,
+        pageExtract: lastReport.pageExtract,
+        turnstileToken,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      out.innerHTML = `<p class="error">${esc(data.error ?? "生成に失敗しました")}</p>`;
+      return;
+    }
+    out.innerHTML = renderAiReview(data);
+  } catch {
+    out.innerHTML =
+      '<p class="error">通信に失敗しました。時間をおいて再試行してください</p>';
+  } finally {
+    btn.disabled = false;
+    if (window.turnstile) window.turnstile.reset();
+    turnstileToken = "";
+  }
+}
+
+function renderAiReview(review) {
+  const CHECK_LABEL = {
+    "link-text": "リンク文言（JIS 2.4.4）",
+    "reading-order": "読み上げ順序（JIS 1.3.2）",
+  };
+  const blocks = review.checks
+    .map((c) => {
+      const items =
+        c.verdict === "ok"
+          ? "<p>問題は見つかりませんでした（目視確認は必要です）</p>"
+          : "<ul>" +
+            c.findings
+              .map(
+                (f) =>
+                  `<li><strong>${esc(f.target)}</strong>: ${esc(f.issue)}<br>💡 ${esc(f.suggestion)}</li>`,
+              )
+              .join("") +
+            "</ul>";
+      return `<div class="ai-check"><h4>🤖 AI所見（要確認）: ${CHECK_LABEL[c.id] ?? esc(c.id)}</h4>${items}<p class="meta">${esc(c.note)}</p></div>`;
+    })
+    .join("");
+  return blocks + `<p class="ai-disclaimer">${esc(review.disclaimer)}</p>`;
 }
 
 function download(blob, filename) {
