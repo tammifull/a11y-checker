@@ -129,7 +129,6 @@ main {
 form {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-top: 4px solid var(--blue);
   border-radius: 12px;
   padding: clamp(20px, 3.5vw, 30px);
   box-shadow:
