@@ -1,10 +1,11 @@
 import puppeteer from "@cloudflare/puppeteer";
 import axe from "axe-core";
+import type { ScanRawViolation } from "./types";
 
 export interface ScanResult {
   url: string;
   axeVersion: string;
-  violations: unknown[];
+  violations: ScanRawViolation[];
   passesCount: number;
 }
 
@@ -42,7 +43,7 @@ export async function runScan(
       });
     });
 
-    const r = results as { violations: unknown[]; passes: unknown[] };
+    const r = results as { violations: ScanRawViolation[]; passes: unknown[] };
     return {
       url,
       axeVersion: axe.version,
