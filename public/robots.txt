@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://a11y-checker.doggo-company.com/sitemap.xml
