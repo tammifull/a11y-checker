@@ -3,6 +3,9 @@ import { runScan } from "./scan";
 import { buildReport } from "./report";
 import { checkRateLimit } from "./rate-limit";
 import { verifyTurnstile } from "./turnstile";
+import { renderReportHtml } from "./report-html";
+import { renderPdf } from "./pdf";
+import type { Report } from "./types";
 
 export interface Env {
   MYBROWSER: Fetcher;
@@ -22,6 +25,10 @@ export default {
 
     if (pathname === "/api/scan" && request.method === "POST") {
       return handleScan(request, env);
+    }
+
+    if (pathname === "/api/pdf" && request.method === "POST") {
+      return handlePdf(request, env);
     }
 
     // それ以外は静的アセット（UI）
@@ -86,6 +93,57 @@ async function handleScan(request: Request, env: Env): Promise<Response> {
       },
       502,
     );
+  }
+}
+
+const MAX_PDF_BODY_BYTES = 2 * 1024 * 1024;
+
+async function handlePdf(request: Request, env: Env): Promise<Response> {
+  const ip = request.headers.get("CF-Connecting-IP");
+  const rate = await checkRateLimit(
+    env.RATE_LIMIT,
+    ip ?? "unknown",
+    Date.now(),
+  );
+  if (!rate.allowed) {
+    return json(
+      {
+        error: "利用回数の上限に達しました。1時間ほどおいて再試行してください",
+      },
+      429,
+    );
+  }
+
+  const raw = await request.text();
+  if (raw.length > MAX_PDF_BODY_BYTES) {
+    return json({ error: "レポートが大きすぎます" }, 413);
+  }
+
+  let report: Report;
+  try {
+    report = JSON.parse(raw) as Report;
+  } catch {
+    return json({ error: "JSONボディが必要です" }, 400);
+  }
+  if (
+    typeof report?.url !== "string" ||
+    !Array.isArray(report?.violations) ||
+    !report?.summary
+  ) {
+    return json({ error: "レポートJSONの形式が正しくありません" }, 400);
+  }
+
+  try {
+    const pdf = await renderPdf(env.MYBROWSER, renderReportHtml(report));
+    return new Response(pdf, {
+      status: 200,
+      headers: {
+        "content-type": "application/pdf",
+        "content-disposition": 'attachment; filename="a11y-report.pdf"',
+      },
+    });
+  } catch (e) {
+    return json({ error: "PDFの生成に失敗しました", detail: String(e) }, 502);
   }
 }
 
