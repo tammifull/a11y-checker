@@ -4,19 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ウェブアクセシビリティチェックツール</title>
+  <meta name="description" content="URLを入力するだけで、ページのアクセシビリティをJIS X 8341-3:2016準拠の日本語・優先度4段階で検査できる無料ツール。デジタル庁ガイドブック準拠。">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap">
   <link rel="stylesheet" href="./style.css">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
   <header>
-    <h1>ウェブアクセシビリティチェックツール</h1>
-    <p>URLを入力すると、ページのアクセシビリティを検査し、問題点を <strong>JIS X 8341-3:2016 準拠の日本語</strong>で、優先度4段階に分けて表示します。</p>
+    <p class="kicker">無料・登録不要・結果は保存されません</p>
+    <h1>ウェブアクセシビリティ<br>チェックツール</h1>
+    <p class="lead">URLを入力すると、ページのアクセシビリティを検査し、問題点を <strong>JIS X 8341-3:2016 準拠の日本語</strong>で、優先度4段階に分けて表示します。</p>
     <p class="basis">デジタル庁「<a href="https://www.digital.go.jp/resources/introduction-to-web-accessibility-guidebook" target="_blank" rel="noopener">ウェブアクセシビリティ導入ガイドブック</a>」（DS-671.2、2025年10月16日 ／ <a href="https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/08ed88e1-d622-43cb-900b-84957ab87826/bf5f4482/20251016_introduction_to_web_accessibility.pdf" target="_blank" rel="noopener">本文PDF・別窓</a>）の考え方に準拠しています。</p>
   </header>
 
-  <main>
+  <main id="main">
     <form id="scan-form">
       <label for="url">検査するページのURL</label>
       <div class="row">
@@ -32,8 +39,8 @@
       <p id="result-meta"></p>
       <div class="summary" id="summary"></div>
       <div class="downloads">
-        <button type="button" id="dl-json">JSONをダウンロード</button>
-        <button type="button" id="dl-pdf">PDFレポートをダウンロード</button>
+        <button type="button" id="dl-json" class="secondary">JSONをダウンロード</button>
+        <button type="button" id="dl-pdf" class="secondary">PDFレポートをダウンロード</button>
       </div>
       <div id="violations"></div>
       <section id="manual-section">

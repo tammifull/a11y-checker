@@ -56,15 +56,15 @@ function renderReport(report) {
 
   const s = report.summary;
   document.getElementById("summary").innerHTML = [
-    ["① 重大", s.critical],
-    ["② 必須", s.required],
-    ["③ 個別対応", s.individual],
-    ["④ 手動確認", s.manual],
-    ["合格チェック", s.passed],
+    ["① 重大", s.critical, "critical"],
+    ["② 必須", s.required, "required"],
+    ["③ 個別対応", s.individual, "individual"],
+    ["④ 手動確認", s.manual, "manual"],
+    ["合格チェック", s.passed, "passed"],
   ]
     .map(
-      ([label, num]) =>
-        `<div class="card"><span class="num">${num}</span>${label}</div>`,
+      ([label, num, cls]) =>
+        `<div class="card ${cls}"><span class="num">${num}</span>${label}</div>`,
     )
     .join("");
 
@@ -98,7 +98,12 @@ function renderReport(report) {
     )
     .join("");
 
-  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  document
+    .getElementById("result")
+    .scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
 }
 
 function download(blob, filename) {
