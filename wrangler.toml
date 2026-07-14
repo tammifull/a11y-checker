@@ -22,5 +22,6 @@ binding = "RATE_LIMIT"
 id = "f970107db7be47f5866a428c7d24ef9c"
 
 [vars]
-# Turnstile テストキー（非表示モード・常に成功）。本番キーはドメイン確定後に差し替え
-TURNSTILE_SITE_KEY = "1x00000000000000000000BB"
+# Turnstile 本番サイトキー（管理モード、a11y-checker.doggo-company.com + workers.dev）
+# ローカル開発時は .dev.vars のテストキーで上書きされる
+TURNSTILE_SITE_KEY = "0x4AAAAAAD1hUFsqsm7SPlYi"

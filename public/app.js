@@ -12,6 +12,8 @@ async function init() {
   const { turnstileSiteKey } = await res.json();
 
   // Turnstile を明示レンダリング（トークンはコールバックで受け取る）
+  // 注: /api/config の取得完了時点で load イベントが済んでいることがあるため、
+  // イベント待ちではなく window.turnstile の出現をポーリングして確実に描画する
   const render = () =>
     window.turnstile.render("#turnstile-widget", {
       sitekey: turnstileSiteKey,
@@ -22,8 +24,16 @@ async function init() {
         turnstileToken = "";
       },
     });
-  if (window.turnstile) render();
-  else window.addEventListener("load", render);
+  if (window.turnstile) {
+    render();
+  } else {
+    const timer = setInterval(() => {
+      if (window.turnstile) {
+        clearInterval(timer);
+        render();
+      }
+    }, 100);
+  }
 }
 
 function setStatus(message, isError = false) {
@@ -103,6 +113,14 @@ document.getElementById("scan-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const url = document.getElementById("url").value.trim();
   const button = document.getElementById("submit");
+
+  if (!turnstileToken) {
+    setStatus(
+      "セキュリティ確認の完了を待っています。チェックボックスが表示されている場合はチェックしてから、もう一度「検査する」を押してください",
+      true,
+    );
+    return;
+  }
 
   button.disabled = true;
   setStatus("検査中です（10〜30秒ほどかかります）…");
