@@ -1,3 +1,50 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><title>a11y-checker（準備中）</title></head>
-<body><p>UIは Task 7 で実装</p></body></html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ウェブアクセシビリティ・チェッカー</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>ウェブアクセシビリティ・チェッカー</h1>
+    <p>URLを入力すると、ページのアクセシビリティを検査し、問題点を <strong>JIS X 8341-3:2016 準拠の日本語</strong>で、優先度4段階に分けて表示します。</p>
+  </header>
+
+  <main>
+    <form id="scan-form">
+      <label for="url">検査するページのURL</label>
+      <div class="row">
+        <input type="url" id="url" name="url" required placeholder="https://example.com" autocomplete="url">
+        <button type="submit" id="submit">検査する</button>
+      </div>
+      <div id="turnstile-widget"></div>
+      <p id="status" role="status" aria-live="polite"></p>
+    </form>
+
+    <section id="result" hidden>
+      <h2>検査結果</h2>
+      <p id="result-meta"></p>
+      <div class="summary" id="summary"></div>
+      <div class="downloads">
+        <button type="button" id="dl-json">JSONをダウンロード</button>
+        <button type="button" id="dl-pdf">PDFレポートをダウンロード</button>
+      </div>
+      <div id="violations"></div>
+      <section id="manual-section">
+        <h3>④ 手動確認項目（自動判定できない項目）</h3>
+        <p>自動チェックで判定できるのはWCAG達成基準の2〜3割です。以下は人の確認が必要です。</p>
+        <ul id="manual-list"></ul>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>検査エンジン: axe-core ／ 規格: JIS X 8341-3:2016（WCAG 2.0） ／ 出典: デジタル庁 ウェブアクセシビリティ導入ガイドブック</p>
+  </footer>
+</body>
+</html>
