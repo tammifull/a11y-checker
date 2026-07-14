@@ -229,6 +229,9 @@ async function handleAiReview(request: Request, env: Env): Promise<Response> {
   }
 }
 
+// service binding（RPC）用エントリポイント。webcheck-mcp から呼ばれる。default export は変更しない。
+export { ScanRpc } from "./rpc";
+
 export function json(data: unknown, status: number): Response {
   return new Response(JSON.stringify(data, null, 2), {
     status,
