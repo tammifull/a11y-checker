@@ -7,6 +7,16 @@ const scan: ScanResult = {
   url: "https://example.com/",
   axeVersion: "4.12.1",
   passesCount: 25,
+  pageExtract: {
+    links: [
+      {
+        text: "こちら",
+        href: "/detail",
+        context: "詳しくはこちらをご覧ください",
+      },
+    ],
+    outline: [{ tag: "h1", text: "タイトル" }],
+  },
   violations: [
     {
       id: "image-alt",
@@ -88,6 +98,10 @@ describe("buildReport", () => {
     expect(
       buildReport(many, "2026-07-14T12:00:00Z").violations[0].targets,
     ).toHaveLength(5);
+  });
+
+  it("pageExtract がレポートに引き継がれる", () => {
+    expect(report.pageExtract?.links[0].text).toBe("こちら");
   });
 
   it("手動チェック項目が常に併記される", () => {

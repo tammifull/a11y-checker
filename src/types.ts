@@ -35,6 +35,13 @@ export interface Report {
   };
   violations: ReportViolation[];
   manualChecks: ManualCheck[];
+  pageExtract?: PageExtract;
+}
+
+/** AI所見用にスキャン時へ抽出するページ情報（設計書 phase2 §4） */
+export interface PageExtract {
+  links: { text: string; href: string; context: string }[];
+  outline: { tag: string; text: string }[];
 }
 
 /** axe の violation のうち、この製品が使う部分だけの型 */

@@ -1,12 +1,14 @@
 import puppeteer from "@cloudflare/puppeteer";
 import axe from "axe-core";
-import type { ScanRawViolation } from "./types";
+import { EXTRACT_SCRIPT } from "./extract";
+import type { PageExtract, ScanRawViolation } from "./types";
 
 export interface ScanResult {
   url: string;
   axeVersion: string;
   violations: ScanRawViolation[];
   passesCount: number;
+  pageExtract: PageExtract;
 }
 
 export async function runScan(
@@ -43,12 +45,16 @@ export async function runScan(
       });
     });
 
+    // AI所見用のページ情報（リンク・アウトライン）も同じ訪問で抽出しておく
+    const pageExtract = (await page.evaluate(EXTRACT_SCRIPT)) as PageExtract;
+
     const r = results as { violations: ScanRawViolation[]; passes: unknown[] };
     return {
       url,
       axeVersion: axe.version,
       violations: r.violations,
       passesCount: r.passes.length,
+      pageExtract,
     };
   } finally {
     await browser.close();

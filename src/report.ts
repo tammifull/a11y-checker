@@ -42,5 +42,6 @@ export function buildReport(scan: ScanResult, scannedAt: string): Report {
     },
     violations,
     manualChecks: MANUAL_CHECKS,
+    pageExtract: scan.pageExtract,
   };
 }
