@@ -334,7 +334,7 @@ details[open] {
   padding-bottom: 8px;
 }
 details p {
-  margin: 10px 0;
+  margin: 10px 16px;
 }
 details .meta {
   color: var(--ink-soft);
