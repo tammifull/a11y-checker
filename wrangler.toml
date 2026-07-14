@@ -6,8 +6,9 @@ compatibility_flags = ["nodejs_compat"]
 
 browser = { binding = "MYBROWSER" }
 
-# カスタムドメイン a11y-checker.doggo-company.com は保留中:
-# doggo-company.com のDNSがXserver運用のため、Cloudflareにゾーン追加（NS移管）が先に必要
+routes = [
+  { pattern = "a11y-checker.doggo-company.com", custom_domain = true }
+]
 
 
 [assets]
