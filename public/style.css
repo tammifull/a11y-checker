@@ -28,6 +28,13 @@ header h1 {
   font-size: 1.6rem;
   margin-bottom: 4px;
 }
+header .basis {
+  color: #444;
+  font-size: 0.9rem;
+}
+header .basis a {
+  color: var(--accent);
+}
 form {
   background: #fff;
   border: 1px solid var(--border);

@@ -71,6 +71,7 @@ export function renderReportHtml(report: Report): string {
     <h1>ウェブアクセシビリティ検査レポート</h1>
     <p class="url">${esc(report.url)}</p>
     <p>検査日時: ${esc(date)} ／ 検査エンジン: axe-core ${esc(report.engine.axeCore)} ／ 規格: JIS X 8341-3:2016（WCAG 2.0）</p>
+    <p>デジタル庁「ウェブアクセシビリティ導入ガイドブック」（DS-671.2、2025年10月16日）の考え方に準拠</p>
   </div>
   <div class="summary">
     <div><span class="num">${report.summary.critical}</span>① 重大</div>
@@ -86,7 +87,7 @@ export function renderReportHtml(report: Report): string {
   </section>
   <div class="note">
     自動チェックで判定できるのはWCAG達成基準の2〜3割です。残りは目視・キーボード操作・スクリーンリーダーでの確認が必要です。<br>
-    出典: デジタル庁「ウェブアクセシビリティ導入ガイドブック」／ WAIC JIS X 8341-3:2016 ガイドライン
+    準拠: デジタル庁「ウェブアクセシビリティ導入ガイドブック」（DS-671.2、2025年10月16日）／ WAIC JIS X 8341-3:2016 ガイドライン
   </div>
 </body>
 </html>`;
