@@ -1,11 +1,13 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { validateScanUrl } from "./url-guard";
 import { runScan } from "./scan";
 import { buildReport } from "./report";
-import { checkRateLimit } from "./rate-limit";
+import { checkAiRateLimit, checkRateLimit } from "./rate-limit";
 import { verifyTurnstile } from "./turnstile";
 import { renderReportHtml } from "./report-html";
 import { renderPdf } from "./pdf";
-import type { Report } from "./types";
+import { runAiReview } from "./ai-review";
+import type { PageExtract, Report } from "./types";
 
 export interface Env {
   MYBROWSER: Fetcher;
@@ -13,6 +15,7 @@ export interface Env {
   RATE_LIMIT: KVNamespace;
   TURNSTILE_SITE_KEY: string;
   TURNSTILE_SECRET: string;
+  ANTHROPIC_API_KEY: string;
 }
 
 export default {
@@ -29,6 +32,10 @@ export default {
 
     if (pathname === "/api/pdf" && request.method === "POST") {
       return handlePdf(request, env);
+    }
+
+    if (pathname === "/api/ai-review" && request.method === "POST") {
+      return handleAiReview(request, env);
     }
 
     // それ以外は静的アセット（UI）
@@ -144,6 +151,81 @@ async function handlePdf(request: Request, env: Env): Promise<Response> {
     });
   } catch (e) {
     return json({ error: "PDFの生成に失敗しました", detail: String(e) }, 502);
+  }
+}
+
+const MAX_AI_BODY_BYTES = 100 * 1024;
+
+async function handleAiReview(request: Request, env: Env): Promise<Response> {
+  const raw = await request.text();
+  if (raw.length > MAX_AI_BODY_BYTES) {
+    return json({ error: "リクエストが大きすぎます" }, 413);
+  }
+
+  let body: {
+    url?: string;
+    pageExtract?: PageExtract;
+    turnstileToken?: string;
+  };
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    return json({ error: "JSONボディが必要です" }, 400);
+  }
+  if (
+    typeof body.url !== "string" ||
+    !body.pageExtract ||
+    !Array.isArray(body.pageExtract.links)
+  ) {
+    return json(
+      {
+        error:
+          "スキャン結果（pageExtract）が必要です。先に検査を実行してください",
+      },
+      400,
+    );
+  }
+
+  const ip = request.headers.get("CF-Connecting-IP");
+  const human = await verifyTurnstile(
+    env.TURNSTILE_SECRET,
+    body.turnstileToken ?? "",
+    ip,
+  );
+  if (!human) {
+    return json(
+      {
+        error:
+          "認証（Turnstile）を通過できませんでした。ページを再読み込みして再試行してください",
+      },
+      400,
+    );
+  }
+
+  const rate = await checkAiRateLimit(
+    env.RATE_LIMIT,
+    ip ?? "unknown",
+    Date.now(),
+  );
+  if (!rate.allowed) {
+    return json(
+      { error: "AI所見は1日3回までです。明日また試してください" },
+      429,
+    );
+  }
+
+  try {
+    const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    const review = await runAiReview(client, body.url, body.pageExtract);
+    return json(review, 200);
+  } catch (e) {
+    return json(
+      {
+        error: "AI所見の生成に失敗しました。時間をおいて再試行してください",
+        detail: String(e),
+      },
+      502,
+    );
   }
 }
 
