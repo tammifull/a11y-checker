@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { checkRateLimit, LIMIT_PER_WINDOW } from "../src/rate-limit";
+import {
+  checkAiRateLimit,
+  checkRateLimit,
+  AI_LIMIT_PER_DAY,
+  LIMIT_PER_WINDOW,
+} from "../src/rate-limit";
 import type { RateLimitKV } from "../src/rate-limit";
 
 function fakeKV(): RateLimitKV & { store: Map<string, string> } {
@@ -51,5 +56,27 @@ describe("checkRateLimit", () => {
     expect((await checkRateLimit(kv, "1.2.3.4", nextWindow)).allowed).toBe(
       true,
     );
+  });
+});
+
+describe("checkAiRateLimit", () => {
+  it("1日3回までは許可し、4回目を拒否する", async () => {
+    const kv = fakeKV();
+    for (let i = 0; i < AI_LIMIT_PER_DAY; i++) {
+      expect((await checkAiRateLimit(kv, "1.2.3.4", T0)).allowed).toBe(true);
+    }
+    expect((await checkAiRateLimit(kv, "1.2.3.4", T0)).allowed).toBe(false);
+  });
+
+  it("既存のスキャン制限とカウンタが独立している", async () => {
+    const kv = fakeKV();
+    for (let i = 0; i < AI_LIMIT_PER_DAY; i++) await checkAiRateLimit(kv, "1.2.3.4", T0);
+    expect((await checkRateLimit(kv, "1.2.3.4", T0)).allowed).toBe(true);
+  });
+
+  it("翌日はリセットされる", async () => {
+    const kv = fakeKV();
+    for (let i = 0; i < AI_LIMIT_PER_DAY; i++) await checkAiRateLimit(kv, "1.2.3.4", T0);
+    expect((await checkAiRateLimit(kv, "1.2.3.4", T0 + 86400 * 1000)).allowed).toBe(true);
   });
 });

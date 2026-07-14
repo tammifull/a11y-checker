@@ -17,6 +17,25 @@ export interface RateLimitResult {
   remaining: number;
 }
 
+/** AI所見の1 IP・1日あたりの許可回数（Claude APIのコスト防御） */
+export const AI_LIMIT_PER_DAY = 3;
+const DAY_SEC = 86400;
+
+export async function checkAiRateLimit(
+  kv: RateLimitKV,
+  ip: string,
+  nowMs: number,
+): Promise<RateLimitResult> {
+  const day = Math.floor(nowMs / 1000 / DAY_SEC);
+  const key = `ai:${ip}:${day}`;
+  const current = Number((await kv.get(key)) ?? "0");
+  if (current >= AI_LIMIT_PER_DAY) {
+    return { allowed: false, remaining: 0 };
+  }
+  await kv.put(key, String(current + 1), { expirationTtl: DAY_SEC + 60 });
+  return { allowed: true, remaining: AI_LIMIT_PER_DAY - current - 1 };
+}
+
 export async function checkRateLimit(
   kv: RateLimitKV,
   ip: string,
