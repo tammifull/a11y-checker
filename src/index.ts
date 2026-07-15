@@ -90,7 +90,9 @@ async function handleScan(request: Request, env: Env): Promise<Response> {
   try {
     const scan = await runScan(env.MYBROWSER, guard.url);
     const report = buildReport(scan, new Date().toISOString());
-    return json(report, 200);
+    // 視覚AIレビュー用にスクショを同梱（クライアントが /api/ai-review へ渡す）。
+    // RPC 経路（webcheck-mcp）は buildReport の Report のみ使うので肥大化しない。
+    return json({ ...report, screenshot: scan.screenshot }, 200);
   } catch (e) {
     return json(
       {
@@ -154,7 +156,8 @@ async function handlePdf(request: Request, env: Env): Promise<Response> {
   }
 }
 
-const MAX_AI_BODY_BYTES = 100 * 1024;
+// pageExtract に加えて視覚レビュー用スクショ（JPEG base64・最大 ~300KB）も受けるため広めに取る
+const MAX_AI_BODY_BYTES = 1024 * 1024;
 
 async function handleAiReview(request: Request, env: Env): Promise<Response> {
   const raw = await request.text();
@@ -165,6 +168,7 @@ async function handleAiReview(request: Request, env: Env): Promise<Response> {
   let body: {
     url?: string;
     pageExtract?: PageExtract;
+    screenshot?: string;
     turnstileToken?: string;
   };
   try {
@@ -216,7 +220,14 @@ async function handleAiReview(request: Request, env: Env): Promise<Response> {
 
   try {
     const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
-    const review = await runAiReview(client, body.url, body.pageExtract);
+    const screenshot =
+      typeof body.screenshot === "string" ? body.screenshot : undefined;
+    const review = await runAiReview(
+      client,
+      body.url,
+      body.pageExtract,
+      screenshot,
+    );
     return json(review, 200);
   } catch (e) {
     return json(

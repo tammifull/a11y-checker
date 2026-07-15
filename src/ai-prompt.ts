@@ -19,6 +19,9 @@ const MAX_PER_GROUP = 20;
 const AI_CHECK_LABEL: Record<string, string> = {
   "link-text": "リンク文言（JIS 2.4.4）",
   "reading-order": "読み上げ順序（JIS 1.3.2）",
+  "color-only": "色依存（JIS 1.4.1・視覚）",
+  "text-in-image": "画像内テキスト（JIS 1.4.5・視覚）",
+  "text-legibility": "文字の視認性（JIS 1.4.3/1.4.4・視覚）",
 };
 
 const FINAL_DISCLAIMER =

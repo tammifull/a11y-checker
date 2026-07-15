@@ -9,6 +9,8 @@ export interface ScanResult {
   violations: ScanRawViolation[];
   passesCount: number;
   pageExtract: PageExtract;
+  /** ファーストビューのスクリーンショット（JPEG base64・data URLでない生base64）。撮影失敗時は空文字 */
+  screenshot: string;
 }
 
 export async function runScan(
@@ -18,6 +20,7 @@ export async function runScan(
   const browser = await puppeteer.launch(browserBinding);
   try {
     const page = await browser.newPage();
+    await page.setViewport({ width: 1280, height: 800 });
     await page.goto(url, { waitUntil: "networkidle0", timeout: 30000 });
 
     // axe-core のソースをページに注入
@@ -48,6 +51,18 @@ export async function runScan(
     // AI所見用のページ情報（リンク・アウトライン）も同じ訪問で抽出しておく
     const pageExtract = (await page.evaluate(EXTRACT_SCRIPT)) as PageExtract;
 
+    // 視覚AIレビュー用にファーストビューのスクショを撮る（失敗しても検査は続行）
+    let screenshot = "";
+    try {
+      screenshot = (await page.screenshot({
+        type: "jpeg",
+        quality: 60,
+        encoding: "base64",
+      })) as unknown as string;
+    } catch {
+      screenshot = "";
+    }
+
     const r = results as { violations: ScanRawViolation[]; passes: unknown[] };
     return {
       url,
@@ -55,6 +70,7 @@ export async function runScan(
       violations: r.violations,
       passesCount: r.passes.length,
       pageExtract,
+      screenshot,
     };
   } finally {
     await browser.close();

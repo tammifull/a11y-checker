@@ -5,6 +5,7 @@ import type { ScanResult } from "../src/scan";
 
 const scan: ScanResult = {
   url: "https://example.com/",
+  screenshot: "",
   axeVersion: "4.12.1",
   passesCount: 25,
   pageExtract: {

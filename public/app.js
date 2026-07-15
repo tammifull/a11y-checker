@@ -122,9 +122,18 @@ function renderAiButton(report) {
     box.innerHTML = "";
     return;
   }
+  const hasShot =
+    typeof lastReport.screenshot === "string" &&
+    lastReport.screenshot.length > 0;
+  const btnLabel = hasShot
+    ? "🤖 AI所見を生成（β）— リンク文言・読み上げ順序＋視覚レビュー"
+    : "🤖 AI所見を生成（β）— リンク文言・読み上げ順序";
+  const noteText = hasShot
+    ? "テキスト系2項目＋スクショからの視覚レビュー（色依存・画像内テキスト・視認性）をAIが下書きします（1日3回まで／結果は要確認）"
+    : "テキスト系2項目をAIが下書きします（1日3回まで／結果は要確認）";
   box.innerHTML = `
-    <button type="button" id="ai-review-btn" class="secondary">🤖 AI所見を生成（β）— リンク文言・読み上げ順序</button>
-    <p class="ai-note">テキスト系2項目をAIが下書きします（1日3回まで／結果は要確認）</p>
+    <button type="button" id="ai-review-btn" class="secondary">${btnLabel}</button>
+    <p class="ai-note">${noteText}</p>
     <div id="ai-review-result"></div>`;
   document
     .getElementById("ai-review-btn")
@@ -148,6 +157,7 @@ async function runAiReviewUi() {
       body: JSON.stringify({
         url: lastReport.url,
         pageExtract: lastReport.pageExtract,
+        screenshot: lastReport.screenshot || undefined,
         turnstileToken,
       }),
     });
@@ -172,6 +182,9 @@ function renderAiReview(review) {
   const CHECK_LABEL = {
     "link-text": "リンク文言（JIS 2.4.4）",
     "reading-order": "読み上げ順序（JIS 1.3.2）",
+    "color-only": "色依存（JIS 1.4.1・視覚）",
+    "text-in-image": "画像内テキスト（JIS 1.4.5・視覚）",
+    "text-legibility": "文字の視認性（JIS 1.4.3/1.4.4・視覚）",
   };
   const blocks = review.checks
     .map((c) => {
@@ -283,6 +296,9 @@ function buildAiPrompt(report, aiReview) {
   const AI_CHECK_LABEL = {
     "link-text": "リンク文言（JIS 2.4.4）",
     "reading-order": "読み上げ順序（JIS 1.3.2）",
+    "color-only": "色依存（JIS 1.4.1・視覚）",
+    "text-in-image": "画像内テキスト（JIS 1.4.5・視覚）",
+    "text-legibility": "文字の視認性（JIS 1.4.3/1.4.4・視覚）",
   };
   const FINAL_DISCLAIMER =
     "本結果はJIS X 8341-3:2016適合の証明ではありません。修正後も人の確認が必要です。";
