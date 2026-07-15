@@ -2,21 +2,25 @@
    基調: デジタル庁ガイドブック表紙のディープブルー / UDフォント / WCAG AA 準拠 */
 
 :root {
-  --blue: #2b46c8;
-  --blue-deep: #1d329c;
-  --blue-tint: #eef1fb;
-  --ink: #1c2030;
-  --ink-soft: #4a4f63;
-  --bg: #f7f8fc;
-  --surface: #fffdfa;
-  --border: #d8dbe8;
-  --critical: #b3261e;
-  --required: #b35309;
-  --individual: #2b46c8;
-  --focus: #f59e0b;
-  --font-body: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  /* デジタル庁デザインシステム(DADS)のカラー基準に準拠。
+     Blue は DADS Blue スケール、中立色は Solid Gray、いずれも本文コントラストは AA 以上。 */
+  --blue: #0017c1; /* DADS Blue-900（プライマリ） */
+  --blue-deep: #00118f; /* DADS Blue-1000（hover/pressed） */
+  --blue-tint: #e8f1fe; /* DADS Blue-50 */
+  --ink: #1a1a1c; /* DADS Solid Gray 900（本文テキスト） */
+  --ink-soft: #626262; /* 二次テキスト（白背景で 5.7:1・AA） */
+  --bg: #f2f3f5; /* ごく淡いニュートラル背景 */
+  --surface: #ffffff; /* DADS の面は白 */
+  --border: #d2d6de; /* DADS Solid Gray 系の境界線 */
+  --critical: #ce0000; /* エラー赤（白背景で 4.75:1・AA） */
+  --required: #b26200; /* 警告オレンジ（白背景で 4.9:1・AA） */
+  --individual: #0017c1; /* プライマリと揃える */
+  --focus: #f59e0b; /* 高視認のフォーカスインジケーター（琥珀） */
+  --font-body:
+    "BIZ UDPGothic", "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
   --font-display:
-    "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", sans-serif;
+    "Zen Kaku Gothic New", "Noto Sans JP", "Hiragino Kaku Gothic ProN",
+    sans-serif;
 }
 
 * {
