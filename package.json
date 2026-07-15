@@ -1,14 +1,24 @@
 {
   "name": "a11y-checker",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "URLを入力するだけでウェブアクセシビリティをJIS X 8341-3:2016準拠の日本語・優先度4段階で検査する無料ツール（Cloudflare Workers + axe-core + Claude）",
+  "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "axe-core",
+    "cloudflare-workers",
+    "jis-x-8341-3",
+    "wcag"
+  ],
+  "author": "Koichi Tamiya (DOGGO Company)",
+  "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",
     "@cloudflare/puppeteer": "^1.1.0",

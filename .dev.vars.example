@@ -1,0 +1,12 @@
+# ローカル開発用のシークレット雛形。`.dev.vars` にコピーして値を入れてください（.dev.vars は git 管理外）。
+# 本番は `wrangler secret put <NAME>` で登録します。
+
+# Anthropic API キー（AIアシスト検査 / 視覚レビューで使用）。https://console.anthropic.com/ で取得
+ANTHROPIC_API_KEY=
+
+# Cloudflare Turnstile のシークレットキー。https://dash.cloudflare.com/?to=/:account/turnstile で取得
+TURNSTILE_SECRET=
+
+# （任意）ローカルで Turnstile サイトキーをテストキーに上書きしたい場合。
+# 本番のサイトキーは wrangler.toml の [vars] TURNSTILE_SITE_KEY を自分のものに置き換えてください。
+# TURNSTILE_SITE_KEY=1x00000000000000000000AA

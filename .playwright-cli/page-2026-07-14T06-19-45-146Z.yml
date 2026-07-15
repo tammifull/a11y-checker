@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - link "本文へスキップ" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - paragraph [ref=e4]: 無料・登録不要・結果は保存されません
+    - heading "ウェブアクセシビリティ チェックツール" [level=1] [ref=e5]
+    - paragraph [ref=e6]:
+      - text: URLを入力すると、ページのアクセシビリティを検査し、問題点を
+      - strong [ref=e7]: JIS X 8341-3:2016 準拠の日本語
+      - text: で、優先度4段階に分けて表示します。
+    - paragraph [ref=e8]:
+      - text: デジタル庁「
+      - link "ウェブアクセシビリティ導入ガイドブック" [ref=e9] [cursor=pointer]:
+        - /url: https://www.digital.go.jp/resources/introduction-to-web-accessibility-guidebook
+      - text: 」（DS-671.2、2025年10月16日 ／
+      - link "本文PDF・別窓" [ref=e10] [cursor=pointer]:
+        - /url: https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/08ed88e1-d622-43cb-900b-84957ab87826/bf5f4482/20251016_introduction_to_web_accessibility.pdf
+      - text: ）の考え方に準拠しています。
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]: 検査するページのURL
+      - generic [ref=e14]:
+        - textbox "検査するページのURL" [ref=e15]:
+          - /placeholder: https://example.com
+        - button "検査する" [ref=e16] [cursor=pointer]
+      - status [ref=e17]
+  - contentinfo [ref=e18]:
+    - region "データの取り扱い・免責" [ref=e19]:
+      - heading "データの取り扱い・免責" [level=2] [ref=e20]
+      - list [ref=e21]:
+        - listitem [ref=e22]:
+          - text: 入力されたURLと検査結果は
+          - strong [ref=e23]: サーバーに保存しません
+          - text: 。検査のためだけに使用します（不正利用防止のため、アクセス回数のみ記録し1時間で自動消去されます）。
+        - listitem [ref=e24]:
+          - text: 検査時は、Cloudflareのブラウザが対象ページに1回アクセスします。
+          - strong [ref=e25]: ご自身が管理するサイト
+          - text: （または許可を得たサイト）の検査にご利用ください。
+        - listitem [ref=e26]:
+          - text: 自動チェックで判定できるのはWCAG達成基準の2〜3割です。本ツールの結果は
+          - strong [ref=e27]: JIS X 8341-3:2016 適合の証明ではありません
+          - text: 。正式な試験はWAICのガイドラインに基づく人の確認が必要です。
+    - paragraph [ref=e28]: "検査エンジン: axe-core ／ 規格: JIS X 8341-3:2016（WCAG 2.0） ／ 準拠: デジタル庁「ウェブアクセシビリティ導入ガイドブック」（DS-671.2、2025年10月16日）"
+    - paragraph [ref=e29]:
+      - text: "運営:"
+      - link "DOGGO Company株式会社" [ref=e30] [cursor=pointer]:
+        - /url: https://doggo-company.com
+      - text: ／
+      - link "お問い合わせフォーム（別窓）" [ref=e31] [cursor=pointer]:
+        - /url: https://doggo-company.com/contact/

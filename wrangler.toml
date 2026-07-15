@@ -1,5 +1,6 @@
 name = "a11y-checker-poc"
-account_id = "404b1a9e790573427570fa5a517b72cd"
+# account_id は wrangler のログイン（OAuth）または環境変数 CLOUDFLARE_ACCOUNT_ID で解決する。
+# clone して使う場合は自分のアカウントに `wrangler login` してデプロイしてください。
 main = "src/index.ts"
 compatibility_date = "2026-07-01"
 compatibility_flags = ["nodejs_compat"]
