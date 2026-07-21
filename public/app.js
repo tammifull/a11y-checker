@@ -185,6 +185,7 @@ function renderAiReview(review) {
     "color-only": "色依存（JIS 1.4.1・視覚）",
     "text-in-image": "画像内テキスト（JIS 1.4.5・視覚）",
     "text-legibility": "文字の視認性（JIS 1.4.3/1.4.4・視覚）",
+    "chart-a11y": "グラフ・チャート（JIS 1.4.1関連・視覚）",
   };
   const blocks = review.checks
     .map((c) => {
@@ -299,6 +300,7 @@ function buildAiPrompt(report, aiReview) {
     "color-only": "色依存（JIS 1.4.1・視覚）",
     "text-in-image": "画像内テキスト（JIS 1.4.5・視覚）",
     "text-legibility": "文字の視認性（JIS 1.4.3/1.4.4・視覚）",
+    "chart-a11y": "グラフ・チャート（JIS 1.4.1関連・視覚）",
   };
   const FINAL_DISCLAIMER =
     "本結果はJIS X 8341-3:2016適合の証明ではありません。修正後も人の確認が必要です。";

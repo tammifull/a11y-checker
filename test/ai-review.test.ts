@@ -26,6 +26,16 @@ describe("buildAiPrompt", () => {
     expect(p.system).toContain("2.4.4");
     expect(p.system).toContain("1.3.2");
   });
+  it("スクショなしでは視覚チェックを含まない", () => {
+    expect(p.system).not.toContain("chart-a11y");
+    expect(p.system).not.toContain("color-only");
+  });
+  it("スクショありでは視覚チェック（chart-a11y含む）を指示する", () => {
+    const pi = buildAiPrompt("https://example.com/", extract, true);
+    expect(pi.system).toContain("chart-a11y");
+    expect(pi.system).toContain("原点が0でなく");
+    expect(pi.system).toContain("グラフが見当たらなければ");
+  });
 });
 
 describe("parseAiReview", () => {
@@ -48,6 +58,20 @@ describe("parseAiReview", () => {
       ],
     });
     expect(parseAiReview(raw).checks[0].verdict).toBe("issues");
+  });
+  it("chart-a11y idを受け入れる", () => {
+    const raw = JSON.stringify({
+      checks: [
+        {
+          id: "chart-a11y",
+          jis: "1.4.1",
+          verdict: "ok",
+          findings: [],
+          note: "グラフ・チャートは検出されなかった",
+        },
+      ],
+    });
+    expect(parseAiReview(raw).checks[0].id).toBe("chart-a11y");
   });
   it("形が不正ならthrowする", () => {
     expect(() => parseAiReview('{"foo": 1}')).toThrow();

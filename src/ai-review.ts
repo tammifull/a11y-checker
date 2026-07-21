@@ -15,13 +15,15 @@ export type AiCheckId =
   | "reading-order"
   | "color-only"
   | "text-in-image"
-  | "text-legibility";
+  | "text-legibility"
+  | "chart-a11y";
 
 /** vision（スクショ）が必要な視覚検査の id */
 export const VISUAL_CHECK_IDS: AiCheckId[] = [
   "color-only",
   "text-in-image",
   "text-legibility",
+  "chart-a11y",
 ];
 
 export interface AiCheck {
@@ -57,6 +59,7 @@ export const AI_REVIEW_SCHEMA = {
                 "color-only",
                 "text-in-image",
                 "text-legibility",
+                "chart-a11y",
               ],
             },
             jis: { type: "string" },
@@ -102,6 +105,7 @@ export function buildAiPrompt(
       "チェック3 (id: color-only, JIS 1.4.1): 色だけで情報や状態を区別している箇所（赤=エラー等）を、色以外の手がかり（アイコン・テキスト・下線）で補う提案をする。",
       "チェック4 (id: text-in-image, JIS 1.4.5): 画像内に文字が焼き込まれていて、実テキストにすべき箇所を指摘する（ロゴを除く）。",
       "チェック5 (id: text-legibility, JIS 1.4.3/1.4.4): 文字が小さすぎる・詰まりすぎ・背景とのコントラストが弱く読みにくい箇所を、体感で指摘する（数値のコントラスト判定は axe-core が別途行う）。",
+      "チェック6 (id: chart-a11y, JIS 1.4.1関連・デジタル庁ダッシュボードデザインガイドブック): スクショ内にグラフやチャート（棒・折れ線・円・面など）が見える場合のみ実施する。①色だけで系列や分類を識別している（形・ラベル・数値併記で補う提案をする）②グラフ色面と背景のコントラストが弱いのに数値の併記が無い ③棒グラフの軸の原点が0でなく差が誇張・矮小化されて見える ④凡例がグラフから離れていて対応づけが分かりにくい、を指摘する。グラフが見当たらなければ verdict は ok とし、note に「グラフ・チャートは検出されなかった」と記す。",
       "スクショで判断できないもの（フォーカス可視・キーボード操作・拡大リフロー・アニメ）は対象外。無理に指摘しない。",
     );
   }
@@ -132,6 +136,7 @@ export function parseAiReview(text: string): AiReviewChecks {
     "color-only",
     "text-in-image",
     "text-legibility",
+    "chart-a11y",
   ];
   for (const c of data.checks) {
     if (!validIds.includes(c.id)) {
@@ -156,7 +161,7 @@ export interface AiClient {
 
 /**
  * @param screenshot 省略可。ページのスクリーンショット（JPEG の base64・data URL でない生の base64）。
- *   渡されると vision で視覚チェック（color-only / text-in-image / text-legibility）も行う。
+ *   渡されると vision で視覚チェック（color-only / text-in-image / text-legibility / chart-a11y）も行う。
  */
 export async function runAiReview(
   client: AiClient,
