@@ -26,3 +26,8 @@ id = "f970107db7be47f5866a428c7d24ef9c"
 # Turnstile 本番サイトキー（管理モード、a11y-checker.doggo-company.com + workers.dev）
 # ローカル開発時は .dev.vars のテストキーで上書きされる
 TURNSTILE_SITE_KEY = "0x4AAAAAAD1hUFsqsm7SPlYi"
+
+# Workers Logs。有効化した時点以降のログのみ収集される（遡及不可）。
+[observability]
+enabled = true
+head_sampling_rate = 1
