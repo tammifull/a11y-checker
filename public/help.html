@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>検査結果の見方｜ウェブアクセシビリティチェックツール</title>
+  <meta name="description" content="ウェブアクセシビリティチェックツールの検査結果の見方。優先度①〜④の読み方、手動確認項目、JSON・PDFでの保存、AI用コピーの使い方をまとめました。">
+  <link rel="canonical" href="https://a11y-checker.doggo-company.com/help">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    .help h2 { margin-top: 2rem; }
+    .help p, .help li { line-height: 1.8; }
+    .help ul, .help ol { padding-left: 1.4em; }
+    .help li { margin-bottom: 0.5em; }
+    .help code { overflow-wrap: anywhere; }
+    .help .back { margin-top: 2.5rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
+  <header>
+    <p class="kicker"><a href="./">ウェブアクセシビリティチェックツール</a></p>
+    <h1>検査結果の見方</h1>
+  </header>
+
+  <main id="main" class="help">
+<p>検査結果の画面で、どこから手を付ければよいかをまとめました。検査は、ご自身が管理するページか、許可を得たページのURLで行ってください。</p>
+
+<h2>優先度の見方</h2>
+<p>見つかった問題点は「① 重大（非干渉）」「② 必須」「③ 個別対応」の3つに分けて表示します。その下に、自動では判定できない「④ 手動確認項目」が並びます。</p>
+<p>直す順番は①→②→③が目安です。①から見直してください。</p>
+
+<h2>手動確認項目について</h2>
+<p>自動検査には axe-core を使っています。自動チェックで判定できるのは WCAG 達成基準の2〜3割です。④の項目は、人がページを見て確かめてください。</p>
+<p>この結果は JIS X 8341-3:2016 への適合を証明するものではありません。正式な試験は、WAIC のガイドラインに基づいて人が確認する必要があります。</p>
+
+<h2>結果を保存する・共有する</h2>
+<ul>
+<li>「JSONをダウンロード」：結果をデータとして保存します。</li>
+<li>「PDFレポートをダウンロード」：結果をPDFで保存します。社内での共有に使えます。</li>
+<li>「🤖 AI用にコピー」：結果を、HTML/CSSの修正を頼む文つきでコピーします。AIアシスタントに貼り付けて相談できます。AIの答えが正しいかは、ご自身で確かめてください。</li>
+</ul>
+<p>入力したURLと検査結果は、サーバーに保存しません。</p>
+
+<h2>改修を相談したいとき</h2>
+<p>サイトの改修について相談したい場合は、運営会社（DOGGO Company株式会社）の<a href="https://doggo-company.com/contact/" target="_blank" rel="noopener">お問い合わせフォーム（別窓）</a>をご利用ください。</p>
+    <p class="back"><a href="./">← ウェブアクセシビリティチェックツールに戻る</a></p>
+  </main>
+
+  <footer>
+    <p>運営: <a href="https://doggo-company.com" target="_blank" rel="noopener">DOGGO Company株式会社</a> ／ <a href="https://doggo-company.com/contact/" target="_blank" rel="noopener">お問い合わせフォーム（別窓）</a></p>
+  </footer>
+</body>
+</html>
